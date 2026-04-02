@@ -1,0 +1,1 @@
+"""Verdict web dashboard."""
