@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pytest*)",
+      "Bash(python -m verdict*)",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(vercel *)",
+      "Bash(pip install*)",
+      "Bash(python -c*)",
+      "Bash(ls*)",
+      "Bash(mkdir*)",
+      "Bash(cat*)",
+      "Bash(curl*)",
+      "Bash(nslookup*)"
+    ]
+  }
+}
