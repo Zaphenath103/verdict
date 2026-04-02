@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "name": "verdict-landing",
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

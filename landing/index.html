@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verdict — The Verification Layer for AI Agents</title>
+<meta name="description" content="Intercept, verify, and trust-score every AI agent action before it reaches production. The CI/CD gate for AI agents.">
+<meta property="og:title" content="Verdict — The Verification Layer for AI Agents">
+<meta property="og:description" content="88% of organizations report agent security incidents. Verdict changes that. Intercept. Verify. Trust-score. Ship with confidence.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://verdict.zaphenath.app">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Verdict — The Verification Layer for AI Agents">
+<meta name="twitter:description" content="The CI/CD gate for AI agents. Trust scores, security checks, and deployment gates.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:#e0e0e0;background:#06060c;overflow-x:hidden}
+code,.mono{font-family:'JetBrains Mono',monospace}
+
+/* ========== NAV ========== */
+nav{background:rgba(6,6,12,0.92);backdrop-filter:blur(16px);padding:16px 48px;display:flex;justify-content:space-between;align-items:center;position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.04)}
+.nav-left{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-mark{width:32px;height:32px;background:linear-gradient(135deg,#00d4ff,#7b2ff7);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff}
+.nav-name{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.nav-tag{font-size:10px;color:#555;margin-left:8px;letter-spacing:1px;text-transform:uppercase;background:rgba(0,212,255,0.08);padding:3px 10px;border-radius:20px;color:#00d4ff}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:#888;text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-cta{background:linear-gradient(135deg,#00d4ff,#7b2ff7);color:#fff!important;padding:9px 22px;border-radius:8px;font-weight:700!important;font-size:13px!important;transition:opacity .2s}
+.nav-cta:hover{opacity:.85}
+
+/* ========== HERO ========== */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:140px 48px 100px;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.025) 1px,transparent 1px);background-size:60px 60px}
+.hero-glow{position:absolute;top:10%;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(0,212,255,0.06) 0%,rgba(123,47,247,0.03) 40%,transparent 70%);pointer-events:none}
+.hero-content{position:relative;max-width:860px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);color:#00d4ff;font-size:12px;font-weight:600;padding:8px 20px;border-radius:30px;margin-bottom:32px;letter-spacing:.4px}
+.hero-badge .dot{width:6px;height:6px;background:#00ff88;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:64px;font-weight:900;line-height:1.05;color:#fff;margin-bottom:24px;letter-spacing:-3px}
+.hero h1 .gradient{background:linear-gradient(90deg,#00d4ff,#7b2ff7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:19px;color:#888;line-height:1.8;max-width:640px;margin:0 auto 48px}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:56px}
+.btn-primary{background:linear-gradient(135deg,#00d4ff,#7b2ff7);color:#fff;border:none;padding:16px 38px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:opacity .2s}
+.btn-primary:hover{opacity:.85}
+.btn-outline{background:transparent;color:#ccc;border:1px solid rgba(255,255,255,0.12);padding:16px 38px;border-radius:10px;font-size:15px;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-outline:hover{border-color:rgba(255,255,255,0.3);color:#fff}
+.hero-install{display:inline-flex;align-items:center;gap:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 24px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#00d4ff;cursor:pointer;transition:all .2s}
+.hero-install:hover{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.2)}
+.hero-install .dollar{color:#555}
+.hero-install .copy{color:#555;font-size:12px;margin-left:8px}
+
+/* ========== STAT BAR ========== */
+.stat-bar{background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);padding:48px;overflow:hidden}
+.stat-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:40px;text-align:center}
+.stat-num{font-size:42px;font-weight:900;background:linear-gradient(135deg,#00d4ff,#7b2ff7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.stat-label{font-size:13px;color:#666;margin-top:8px;line-height:1.5}
+
+/* ========== PROBLEM ========== */
+.problem{padding:120px 48px;max-width:1100px;margin:0 auto}
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;margin-bottom:16px}
+.label-cyan{color:#00d4ff}
+.label-red{color:#ff4466}
+.section-title{font-size:44px;font-weight:900;letter-spacing:-1.5px;margin-bottom:20px;color:#fff;line-height:1.1}
+.section-sub{font-size:17px;color:#888;line-height:1.8;max-width:640px;margin-bottom:48px}
+.quote-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.quote-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:28px;transition:transform .2s}
+.quote-card:hover{transform:translateY(-3px)}
+.quote-card .q-text{font-size:15px;color:#ccc;line-height:1.7;margin-bottom:16px;font-style:italic}
+.quote-card .q-author{font-size:12px;color:#00d4ff;font-weight:600}
+.quote-card .q-role{font-size:11px;color:#555;margin-top:2px}
+
+/* ========== FLOW ========== */
+.flow{padding:120px 48px;background:rgba(255,255,255,0.01)}
+.flow-inner{max-width:1100px;margin:0 auto;text-align:center}
+.flow-pipe{display:flex;align-items:center;justify-content:center;gap:0;margin:56px auto;flex-wrap:wrap;max-width:1000px}
+.flow-step{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:32px 28px;min-width:200px;flex:1;text-align:center}
+.flow-step.active{border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.04)}
+.flow-step.approved{border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.04)}
+.flow-step.blocked{border-color:rgba(255,68,102,0.3);background:rgba(255,68,102,0.04)}
+.flow-icon{font-size:28px;margin-bottom:12px}
+.flow-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:6px}
+.flow-desc{font-size:12px;color:#888;line-height:1.5}
+.flow-arrow{color:#333;font-size:24px;padding:0 8px;flex-shrink:0}
+
+/* ========== CHECKS ========== */
+.checks{padding:120px 48px;max-width:1100px;margin:0 auto}
+.checks-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:48px}
+.check-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:32px;transition:transform .2s}
+.check-card:hover{transform:translateY(-3px)}
+.check-icon{font-size:32px;margin-bottom:14px}
+.check-name{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+.check-desc{font-size:14px;color:#888;line-height:1.7;margin-bottom:16px}
+.check-catches{list-style:none;padding:0}
+.check-catches li{font-size:12px;color:#666;padding:4px 0;padding-left:18px;position:relative}
+.check-catches li::before{content:"";position:absolute;left:0;top:10px;width:6px;height:6px;border-radius:50%}
+.check-catches.red li::before{background:#ff4466}
+.check-catches.orange li::before{background:#ff8800}
+.check-catches.purple li::before{background:#7b2ff7}
+.check-catches.blue li::before{background:#00d4ff}
+
+/* ========== DEMO ========== */
+.demo{padding:120px 48px;background:rgba(255,255,255,0.01)}
+.demo-inner{max-width:900px;margin:0 auto;text-align:center}
+.terminal{background:#0c0c14;border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;margin-top:48px;text-align:left}
+.terminal-bar{background:rgba(255,255,255,0.04);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.terminal-dot{width:10px;height:10px;border-radius:50%}
+.terminal-dot.r{background:#ff5f57}
+.terminal-dot.y{background:#ffbd2e}
+.terminal-dot.g{background:#28c840}
+.terminal-title{font-size:12px;color:#555;margin-left:8px;font-family:'JetBrains Mono',monospace}
+.terminal-body{padding:24px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;overflow-x:auto}
+.t-prompt{color:#00d4ff}
+.t-cmd{color:#e0e0e0}
+.t-comment{color:#444}
+.t-pass{color:#00ff88}
+.t-fail{color:#ff4466}
+.t-warn{color:#ffdd00}
+.t-score{font-size:24px;font-weight:700}
+.t-dim{color:#555}
+
+/* ========== INTEGRATIONS ========== */
+.integrations{padding:120px 48px;max-width:1100px;margin:0 auto}
+.int-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.int-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:28px;text-align:center;transition:all .2s}
+.int-card:hover{border-color:rgba(0,212,255,0.2);transform:translateY(-2px)}
+.int-icon{font-size:36px;margin-bottom:12px}
+.int-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.int-desc{font-size:12px;color:#666}
+
+/* ========== CODE EXAMPLES ========== */
+.code-section{padding:120px 48px;background:rgba(255,255,255,0.01)}
+.code-inner{max-width:900px;margin:0 auto}
+.code-tabs{display:flex;gap:4px;margin-bottom:0}
+.code-tab{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-bottom:none;border-radius:8px 8px 0 0;padding:10px 20px;font-size:13px;font-weight:600;color:#666;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace}
+.code-tab.active{color:#00d4ff;background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.15)}
+.code-block{background:#0c0c14;border:1px solid rgba(255,255,255,0.08);border-radius:0 14px 14px 14px;padding:28px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;overflow-x:auto;display:none}
+.code-block.active{display:block}
+.kw{color:#7b2ff7}
+.fn{color:#00d4ff}
+.str{color:#00ff88}
+.cm{color:#444}
+.num{color:#ff8800}
+.var{color:#e0e0e0}
+
+/* ========== SCORING ========== */
+.scoring{padding:120px 48px;max-width:1100px;margin:0 auto}
+.grade-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:48px}
+.grade-card{border-radius:12px;padding:24px;text-align:center;border:1px solid rgba(255,255,255,0.06);transition:transform .2s}
+.grade-card:hover{transform:scale(1.05)}
+.grade-letter{font-size:36px;font-weight:900;margin-bottom:4px}
+.grade-range{font-size:11px;color:#888;margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.grade-meaning{font-size:11px;color:#666;line-height:1.4}
+.grade-a{background:rgba(0,255,136,0.05);border-color:rgba(0,255,136,0.15)}.grade-a .grade-letter{color:#00ff88}
+.grade-a2{background:rgba(0,255,136,0.03);border-color:rgba(0,255,136,0.1)}.grade-a2 .grade-letter{color:#00dd77}
+.grade-b{background:rgba(255,221,0,0.04);border-color:rgba(255,221,0,0.12)}.grade-b .grade-letter{color:#ffdd00}
+.grade-c{background:rgba(255,136,0,0.04);border-color:rgba(255,136,0,0.12)}.grade-c .grade-letter{color:#ff8800}
+.grade-d{background:rgba(255,68,102,0.03);border-color:rgba(255,68,102,0.1)}.grade-d .grade-letter{color:#ff6666}
+.grade-f{background:rgba(255,68,102,0.05);border-color:rgba(255,68,102,0.15)}.grade-f .grade-letter{color:#ff4466}
+
+/* ========== CTA ========== */
+.cta{padding:120px 48px;text-align:center}
+.cta-inner{max-width:700px;margin:0 auto}
+.cta h2{font-size:48px;font-weight:900;letter-spacing:-2px;margin-bottom:20px;color:#fff}
+.cta h2 .gradient{background:linear-gradient(90deg,#00d4ff,#7b2ff7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cta p{font-size:17px;color:#888;line-height:1.8;margin-bottom:40px}
+
+/* ========== FOOTER ========== */
+footer{background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.04);padding:48px;text-align:center}
+.footer-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
+.footer-links{display:flex;gap:24px;justify-content:center;margin-bottom:16px}
+.footer-links a{color:#666;text-decoration:none;font-size:13px;transition:color .2s}
+.footer-links a:hover{color:#00d4ff}
+.footer-sub{font-size:12px;color:#444}
+.footer-sub a{color:#555;text-decoration:none}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .nav-links{display:none}
+  .hero{padding:120px 24px 80px}
+  .hero h1{font-size:38px;letter-spacing:-1.5px}
+  .hero-sub{font-size:16px}
+  .stat-inner{grid-template-columns:repeat(2,1fr);gap:24px}
+  .stat-num{font-size:32px}
+  .problem,.checks,.integrations,.scoring{padding:80px 24px}
+  .section-title{font-size:32px}
+  .quote-grid{grid-template-columns:1fr}
+  .checks-grid{grid-template-columns:1fr}
+  .int-grid{grid-template-columns:repeat(2,1fr)}
+  .grade-grid{grid-template-columns:repeat(3,1fr)}
+  .flow-pipe{flex-direction:column}
+  .flow-arrow{transform:rotate(90deg)}
+  .code-section,.demo,.flow,.cta{padding:80px 24px}
+}
+@media(max-width:480px){
+  .hero h1{font-size:30px}
+  .stat-inner{grid-template-columns:1fr 1fr}
+  .int-grid{grid-template-columns:1fr}
+  .grade-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-left">
+    <div class="nav-mark">V</div>
+    <span class="nav-name">Verdict</span>
+    <span class="nav-tag">v0.1.0</span>
+  </a>
+  <div class="nav-links">
+    <a href="#how-it-works">How It Works</a>
+    <a href="#checks">Checks</a>
+    <a href="#demo">Demo</a>
+    <a href="#integrations">Integrations</a>
+    <a href="https://github.com/Zaphenath103/verdict" target="_blank">Docs</a>
+    <a href="https://github.com/Zaphenath103/verdict" target="_blank" class="nav-cta">GitHub &rarr;</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span> Open Source &middot; Apache 2.0</div>
+    <h1>The <span class="gradient">verification layer</span> for AI agents.</h1>
+    <p class="hero-sub">Intercept every action. Run security, correctness, alignment, and regression checks. Produce a trust score. Gate deployment. Ship with confidence.</p>
+    <div class="hero-btns">
+      <a href="https://github.com/Zaphenath103/verdict" target="_blank" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        Star on GitHub
+      </a>
+      <a href="#demo" class="btn-outline">See Demo &darr;</a>
+    </div>
+    <div class="hero-install" onclick="navigator.clipboard.writeText('pip install verdict-ai');this.querySelector('.copy').textContent='Copied!'">
+      <span class="dollar">$</span> pip install verdict-ai <span class="copy">Click to copy</span>
+    </div>
+  </div>
+</section>
+
+<!-- STAT BAR -->
+<section class="stat-bar">
+  <div class="stat-inner">
+    <div><div class="stat-num">88%</div><div class="stat-label">of orgs report agent<br>security incidents</div></div>
+    <div><div class="stat-num">14%</div><div class="stat-label">have full security<br>approval for agents</div></div>
+    <div><div class="stat-num">4</div><div class="stat-label">built-in verification<br>check categories</div></div>
+    <div><div class="stat-num">0&ndash;100</div><div class="stat-label">trust score with<br>letter grades A+ to F</div></div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="section-label label-red">THE PROBLEM</div>
+  <h2 class="section-title">AI agents are shipping to production<br>without verification.</h2>
+  <p class="section-sub">Agents write code, execute shell commands, and make HTTP requests in production. Nobody checks what they actually did. Until now.</p>
+  <div class="quote-grid">
+    <div class="quote-card">
+      <p class="q-text">"Verification loops are the single most important thing to get great results from AI coding agents."</p>
+      <div class="q-author">Boris Cherny</div>
+      <div class="q-role">Head of Claude Code, Anthropic</div>
+    </div>
+    <div class="quote-card">
+      <p class="q-text">"88% of organizations have reported AI agent security incidents. Only 14% have full security approval."</p>
+      <div class="q-author">Andrej Karpathy</div>
+      <div class="q-role">AI Researcher &amp; Educator</div>
+    </div>
+    <div class="quote-card">
+      <p class="q-text">"Agent failures are tool-design problems, not model problems. A weaker model with better tools wins."</p>
+      <div class="q-author">Thariq Shihipar</div>
+      <div class="q-role">Claude Code Team, Anthropic</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="flow" id="how-it-works">
+  <div class="flow-inner">
+    <div class="section-label label-cyan">HOW IT WORKS</div>
+    <h2 class="section-title">Five steps between your agent and production.</h2>
+    <p class="section-sub" style="max-width:600px;margin:0 auto">Verdict sits between your agent and deployment, verifying every action before anything ships.</p>
+    <div class="flow-pipe">
+      <div class="flow-step">
+        <div class="flow-icon">&#129302;</div>
+        <div class="flow-name">Agent Runs</div>
+        <div class="flow-desc">Your agent executes a task using tools</div>
+      </div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step active">
+        <div class="flow-icon">&#128269;</div>
+        <div class="flow-name">Tracer Captures</div>
+        <div class="flow-desc">Every action recorded: tools, shell, files, HTTP</div>
+      </div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step active">
+        <div class="flow-icon">&#9989;</div>
+        <div class="flow-name">Checks Run</div>
+        <div class="flow-desc">Security, correctness, alignment, regression</div>
+      </div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step active">
+        <div class="flow-icon">&#127919;</div>
+        <div class="flow-name">Trust Score</div>
+        <div class="flow-desc">0-100 weighted score with letter grade</div>
+      </div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step approved">
+        <div class="flow-icon">&#128640;</div>
+        <div class="flow-name">Ship or Block</div>
+        <div class="flow-desc">Gate deployment in CI/CD pipelines</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKS -->
+<section class="checks" id="checks">
+  <div class="section-label label-cyan">BUILT-IN CHECKS</div>
+  <h2 class="section-title">Four dimensions of verification.</h2>
+  <p class="section-sub">Every agent trace is checked across security, correctness, alignment, and regression. Plus write your own custom checks in 15 lines of Python.</p>
+  <div class="checks-grid">
+    <div class="check-card">
+      <div class="check-icon">&#128274;</div>
+      <div class="check-name">Security</div>
+      <div class="check-desc">Catches dangerous patterns before they cause damage.</div>
+      <ul class="check-catches red">
+        <li>Dangerous commands (rm -rf /, fork bombs)</li>
+        <li>API key &amp; token exposure</li>
+        <li>SQL injection patterns</li>
+        <li>Path traversal attacks</li>
+        <li>Private key &amp; JWT leaks</li>
+      </ul>
+    </div>
+    <div class="check-card">
+      <div class="check-icon">&#9989;</div>
+      <div class="check-name">Correctness</div>
+      <div class="check-desc">Validates agent actions produce expected outcomes.</div>
+      <ul class="check-catches orange">
+        <li>Failed tool calls &amp; error responses</li>
+        <li>Non-zero shell exit codes</li>
+        <li>HTTP 4xx/5xx errors</li>
+        <li>Orphaned tool calls (no result)</li>
+        <li>Retry storms (stuck loops)</li>
+      </ul>
+    </div>
+    <div class="check-card">
+      <div class="check-icon">&#127919;</div>
+      <div class="check-name">Alignment</div>
+      <div class="check-desc">Ensures agent behavior matches stated intent.</div>
+      <ul class="check-catches purple">
+        <li>Unauthorized tool usage</li>
+        <li>File writes outside allowed scope</li>
+        <li>Data exfiltration patterns</li>
+        <li>Action budget exceeded</li>
+        <li>Excessive side effects</li>
+      </ul>
+    </div>
+    <div class="check-card">
+      <div class="check-icon">&#128200;</div>
+      <div class="check-name">Regression</div>
+      <div class="check-desc">Detects behavioral drift against baselines.</div>
+      <ul class="check-catches blue">
+        <li>New errors not in baseline</li>
+        <li>Increased action count</li>
+        <li>New tool usage patterns</li>
+        <li>Performance degradation</li>
+        <li>Changed output patterns</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo" id="demo">
+  <div class="demo-inner">
+    <div class="section-label label-cyan">LIVE DEMO</div>
+    <h2 class="section-title">See Verdict catch a dangerous agent.</h2>
+    <p class="section-sub" style="max-width:600px;margin:0 auto">This agent tried to delete system files and leaked an API key. Verdict caught both and blocked deployment.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <div class="terminal-title">verdict demo</div>
+      </div>
+      <div class="terminal-body" id="terminal-output">
+        <div class="t-prompt">$ <span class="t-cmd">verdict demo</span></div>
+        <br>
+        <div class="t-dim"> __     _______ ____  ____ ___ ____ _____</div>
+        <div class="t-dim"> \ \   / / ____|  _ \|  _ \_ _/ ___|_   _|</div>
+        <div class="t-dim">  \ \ / /|  _| | |_) | | | | | |     | |</div>
+        <div class="t-dim">   \ V / | |___|  _ &lt;| |_| | | |___  | |</div>
+        <div class="t-dim">    \_/  |_____|_| \_\____/___\____| |_|</div>
+        <br>
+        <div><span class="t-dim">Agent:</span> demo-agent</div>
+        <div><span class="t-dim">Trace:</span> 92736f2e609f4636</div>
+        <div><span class="t-dim">Actions:</span> 11</div>
+        <br>
+        <div><span class="t-dim">Running checks...</span></div>
+        <br>
+        <div><span class="t-fail">[CRITICAL]</span> security/dangerous_command</div>
+        <div class="t-dim">  Dangerous shell command: matches 'rm -rf /'</div>
+        <br>
+        <div><span class="t-fail">[HIGH]</span> security/sensitive_data</div>
+        <div class="t-dim">  API key exposure detected (sk-proj-...)</div>
+        <br>
+        <div><span class="t-fail">[HIGH]</span> correctness/http_error</div>
+        <div class="t-dim">  HTTP 500 error: GET https://api.example.com/data</div>
+        <br>
+        <div><span class="t-warn">[MEDIUM]</span> correctness/tool_error</div>
+        <div class="t-dim">  Tool call returned error: Connection timeout</div>
+        <br>
+        <div><span class="t-pass">[PASS]</span> alignment</div>
+        <div class="t-dim">  Agent behavior aligned with expected scope</div>
+        <br>
+        <div><span class="t-pass">[PASS]</span> regression</div>
+        <div class="t-dim">  No baseline - regression check skipped</div>
+        <br>
+        <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;margin-top:8px">
+          <span class="t-dim">Trust Score:</span> <span class="t-fail t-score">0.0/100 (F)</span>
+        </div>
+        <br>
+        <div style="background:rgba(255,68,102,0.1);border:1px solid rgba(255,68,102,0.2);border-radius:8px;padding:12px 16px">
+          <span class="t-fail" style="font-weight:700">VERDICT: BLOCKED</span> <span class="t-dim">- Does not meet deployment threshold</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section class="integrations" id="integrations">
+  <div class="section-label label-cyan">INTEGRATIONS</div>
+  <h2 class="section-title">Drop-in support for every framework.</h2>
+  <p class="section-sub">Three lines of code to add verification to any AI agent.</p>
+  <div class="int-grid">
+    <div class="int-card">
+      <div class="int-icon">&#9883;</div>
+      <div class="int-name">Anthropic</div>
+      <div class="int-desc">TracedAnthropic wrapper</div>
+    </div>
+    <div class="int-card">
+      <div class="int-icon">&#9679;</div>
+      <div class="int-name">OpenAI</div>
+      <div class="int-desc">TracedOpenAI wrapper</div>
+    </div>
+    <div class="int-card">
+      <div class="int-icon">&#128279;</div>
+      <div class="int-name">LangChain</div>
+      <div class="int-desc">Callback handler</div>
+    </div>
+    <div class="int-card">
+      <div class="int-icon">&#128295;</div>
+      <div class="int-name">Any Agent</div>
+      <div class="int-desc">@verdict_traced decorator</div>
+    </div>
+  </div>
+</section>
+
+<!-- CODE EXAMPLES -->
+<section class="code-section">
+  <div class="code-inner">
+    <div class="section-label label-cyan">CODE</div>
+    <h2 class="section-title" style="margin-bottom:32px">Three lines to verify any agent.</h2>
+    <div class="code-tabs">
+      <div class="code-tab active" onclick="showTab('basic')">Basic</div>
+      <div class="code-tab" onclick="showTab('anthropic')">Anthropic</div>
+      <div class="code-tab" onclick="showTab('ci')">CI/CD</div>
+      <div class="code-tab" onclick="showTab('custom')">Custom Check</div>
+    </div>
+    <div class="code-block active" id="tab-basic">
+<span class="kw">from</span> <span class="fn">verdict</span> <span class="kw">import</span> Tracer, Verifier
+<span class="kw">from</span> <span class="fn">verdict.checks</span> <span class="kw">import</span> get_default_checks
+
+tracer = Tracer(agent_name=<span class="str">"my-agent"</span>)
+<span class="kw">with</span> tracer.trace(<span class="str">"deploy-task"</span>) <span class="kw">as</span> t:
+    t.record_shell_exec(<span class="str">"npm run build"</span>, exit_code=<span class="num">0</span>)
+    t.record_shell_exec(<span class="str">"npm test"</span>, exit_code=<span class="num">0</span>)
+
+verifier = Verifier()
+<span class="kw">for</span> check <span class="kw">in</span> get_default_checks():
+    verifier.add_check(check)
+
+report = verifier.verify(t)
+<span class="fn">print</span>(f<span class="str">"Trust: {report.trust_score}/100 ({report.trust_grade})"</span>)
+<span class="cm"># Trust: 100.0/100 (A+)</span>
+    </div>
+    <div class="code-block" id="tab-anthropic">
+<span class="kw">from</span> <span class="fn">verdict.integrations.anthropic</span> <span class="kw">import</span> TracedAnthropic
+
+<span class="cm"># Drop-in replacement for Anthropic client</span>
+client = TracedAnthropic()
+
+response = client.messages.create(
+    model=<span class="str">"claude-sonnet-4-20250514"</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Deploy the app"</span>}],
+    tools=[...],
+)
+
+<span class="cm"># Verify what the agent actually did</span>
+report = client.verdict_verify()
+<span class="fn">print</span>(f<span class="str">"Trust: {report.trust_score} ({report.trust_grade})"</span>)
+    </div>
+    <div class="code-block" id="tab-ci">
+<span class="cm"># In your CI/CD pipeline:</span>
+<span class="cm"># verdict verify trace.json --ci --threshold 85</span>
+
+<span class="cm"># Or in Python:</span>
+report = verifier.verify(trace)
+<span class="kw">if</span> report.trust_score < <span class="num">85</span> <span class="kw">or</span> report.has_critical():
+    sys.exit(<span class="num">1</span>)  <span class="cm"># Block deployment</span>
+
+<span class="cm"># GitHub Actions example:</span>
+<span class="cm"># - name: Verify agent trace</span>
+<span class="cm">#   run: verdict verify trace.json --ci --threshold 85</span>
+    </div>
+    <div class="code-block" id="tab-custom">
+<span class="kw">from</span> <span class="fn">verdict.core.verifier</span> <span class="kw">import</span> BaseCheck
+<span class="kw">from</span> <span class="fn">verdict.core.types</span> <span class="kw">import</span> Category, CheckResult, Severity
+
+<span class="kw">class</span> <span class="fn">NoProdDBCheck</span>(BaseCheck):
+    name = <span class="str">"no_prod_db"</span>
+    category = Category.SECURITY
+
+    <span class="kw">def</span> <span class="fn">run</span>(self, trace):
+        <span class="kw">for</span> action <span class="kw">in</span> trace.actions:
+            <span class="kw">if</span> <span class="str">"prod-db"</span> <span class="kw">in</span> <span class="fn">str</span>(action.content <span class="kw">or</span> <span class="str">""</span>):
+                <span class="kw">return</span> [CheckResult(
+                    check_name=self.name,
+                    category=self.category,
+                    passed=<span class="num">False</span>,
+                    severity=Severity.CRITICAL,
+                    message=<span class="str">"Production DB access"</span>,
+                )]
+        <span class="kw">return</span> [CheckResult(..., passed=<span class="num">True</span>)]
+
+verifier.add_check(NoProdDBCheck())
+    </div>
+  </div>
+</section>
+
+<!-- SCORING -->
+<section class="scoring" id="scoring">
+  <div class="section-label label-cyan">TRUST SCORING</div>
+  <h2 class="section-title">Quantified trust, not vibes.</h2>
+  <p class="section-sub">Every agent trace receives a weighted score. Critical findings instantly block. Security failures weigh 1.5x. Coverage increases confidence.</p>
+  <div class="grade-grid">
+    <div class="grade-card grade-a">
+      <div class="grade-letter">A+</div>
+      <div class="grade-range">97-100</div>
+      <div class="grade-meaning">Pristine. Ship it.</div>
+    </div>
+    <div class="grade-card grade-a2">
+      <div class="grade-letter">A</div>
+      <div class="grade-range">90-96</div>
+      <div class="grade-meaning">Excellent. Safe to deploy.</div>
+    </div>
+    <div class="grade-card grade-b">
+      <div class="grade-letter">B</div>
+      <div class="grade-range">80-89</div>
+      <div class="grade-meaning">Good. Deployable.</div>
+    </div>
+    <div class="grade-card grade-c">
+      <div class="grade-letter">C</div>
+      <div class="grade-range">70-79</div>
+      <div class="grade-meaning">Review first.</div>
+    </div>
+    <div class="grade-card grade-d">
+      <div class="grade-letter">D</div>
+      <div class="grade-range">60-69</div>
+      <div class="grade-meaning">Significant issues.</div>
+    </div>
+    <div class="grade-card grade-f">
+      <div class="grade-letter">F</div>
+      <div class="grade-range">0-59</div>
+      <div class="grade-meaning">Blocked.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-inner">
+    <h2>Stop shipping <span class="gradient">unverified agents.</span></h2>
+    <p>Verdict is open source, model-agnostic, and takes 3 lines to integrate. Start verifying your agents today.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:32px">
+      <a href="https://github.com/Zaphenath103/verdict" target="_blank" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        Star on GitHub
+      </a>
+      <a href="https://github.com/Zaphenath103/verdict#quick-start" target="_blank" class="btn-outline">Read the Docs &rarr;</a>
+    </div>
+    <div class="hero-install" onclick="navigator.clipboard.writeText('pip install verdict-ai');this.querySelector('.copy').textContent='Copied!'" style="margin:0 auto">
+      <span class="dollar">$</span> pip install verdict-ai <span class="copy">Click to copy</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <div class="nav-mark" style="width:24px;height:24px;font-size:12px;border-radius:6px">V</div>
+    <span style="font-size:14px;font-weight:700;color:#888">Verdict</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com/Zaphenath103/verdict" target="_blank">GitHub</a>
+    <a href="https://github.com/Zaphenath103/verdict#quick-start" target="_blank">Docs</a>
+    <a href="https://github.com/Zaphenath103/verdict/issues" target="_blank">Issues</a>
+    <a href="https://zaphenath.app" target="_blank">Zaphenath Labs</a>
+  </div>
+  <div class="footer-sub">Built by <a href="https://zaphenath.app" target="_blank">Zaphenath Labs</a> &middot; Apache 2.0 License</div>
+</footer>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.code-block').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
